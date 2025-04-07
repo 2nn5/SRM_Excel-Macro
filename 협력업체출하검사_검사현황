@@ -1,0 +1,83 @@
+Sub 협력업체출하검사_피벗테이블()
+'
+' 엑셀매크로
+' 협력업체출하검사_피벗테이블 매크로
+'
+
+'
+    Cells.Select
+    With Selection.Font
+        .Name = "맑은 고딕"
+        .Size = 10
+        .Strikethrough = False
+        .Superscript = False
+        .Subscript = False
+        .OutlineFont = False
+        .Shadow = False
+        .Underline = xlUnderlineStyleNone
+        .ThemeColor = xlThemeColorLight1
+        .TintAndShade = 0
+        .ThemeFont = xlThemeFontMinor
+    End With
+    Cells.EntireColumn.AutoFit
+    Range("B2").Select
+    ActiveWindow.FreezePanes = True
+    Application.CutCopyMode = False
+    Sheets.Add
+    ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+        "Sheet!R1C1:R1448C19", Version:=8).CreatePivotTable TableDestination:= _
+        "Sheet1!R3C1", TableName:="피벗 테이블13", DefaultVersion:=8
+    Sheets("Sheet1").Select
+    Cells(3, 1).Select
+    With ActiveSheet.PivotTables("피벗 테이블13")
+        .ColumnGrand = True
+        .HasAutoFormat = True
+        .DisplayErrorString = False
+        .DisplayNullString = True
+        .EnableDrilldown = True
+        .ErrorString = ""
+        .MergeLabels = False
+        .NullString = ""
+        .PageFieldOrder = 2
+        .PageFieldWrapCount = 0
+        .PreserveFormatting = True
+        .RowGrand = True
+        .SaveData = True
+        .PrintTitles = False
+        .RepeatItemsOnEachPrintedPage = True
+        .TotalsAnnotation = False
+        .CompactRowIndent = 1
+        .InGridDropZones = False
+        .DisplayFieldCaptions = True
+        .DisplayMemberPropertyTooltips = False
+        .DisplayContextTooltips = True
+        .ShowDrillIndicators = True
+        .PrintDrillIndicators = False
+        .AllowMultipleFilters = False
+        .SortUsingCustomLists = True
+        .FieldListSortAscending = False
+        .ShowValuesRow = False
+        .CalculatedMembersInFilters = False
+        .RowAxisLayout xlCompactRow
+    End With
+    With ActiveSheet.PivotTables("피벗 테이블13").PivotCache
+        .RefreshOnFileOpen = False
+        .MissingItemsLimit = xlMissingItemsDefault
+    End With
+    ActiveSheet.PivotTables("피벗 테이블13").RepeatAllLabels xlRepeatLabels
+    With ActiveSheet.PivotTables("피벗 테이블13").PivotFields("quality.partner")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    ActiveSheet.PivotTables("피벗 테이블13").AddDataField ActiveSheet.PivotTables( _
+        "피벗 테이블13").PivotFields("quality.inspectionQty"), "합계 : quality.inspectionQty" _
+        , xlSum
+    ActiveSheet.PivotTables("피벗 테이블13").AddDataField ActiveSheet.PivotTables( _
+        "피벗 테이블13").PivotFields("quality.approvalQty"), "합계 : quality.approvalQty", _
+        xlSum
+    ActiveSheet.PivotTables("피벗 테이블13").AddDataField ActiveSheet.PivotTables( _
+        "피벗 테이블13").PivotFields("quality.rejectQty"), "합계 : quality.rejectQty", xlSum
+    Range("B4:D8").Select
+    Selection.Style = "Comma [0]"
+    Range("A1").Select
+End Sub
